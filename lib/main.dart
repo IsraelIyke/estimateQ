@@ -164,16 +164,16 @@ class _MyHomePageState extends State<MyHomePage>
             IconButton(
               icon: const Icon(
                 Icons.settings,
-                size: 17,
+                size: 19,
                 color: Colors.orangeAccent,
               ),
               onPressed: () => _navigateToSettings(context),
             ),
           ],
         ),
-        toolbarHeight: 40,
+        toolbarHeight: 55,
         titleTextStyle: const TextStyle(
-          fontSize: 17,
+          fontSize: 19,
           color: Colors.orangeAccent,
           fontWeight: FontWeight.bold,
           fontStyle: FontStyle.italic,
@@ -329,9 +329,22 @@ class _ToolsPageState extends State<ToolsPage>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tools'),
+        titleTextStyle: const TextStyle(
+          fontSize: 19,
+          color: Colors.orangeAccent,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         automaticallyImplyLeading: false,
       ),
-      body: const Center(child: Text('Tools Page Content')),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: const Center(
+          child: Text(
+            'All the Tools including the automatic and manual tools will be here',
+          ),
+        ),
+      ),
     );
   }
 }
@@ -353,10 +366,23 @@ class _BotAssistantPageState extends State<BotAssistantPage>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bot Assistant'),
+        title: const Text('Chat Bot'),
+        titleTextStyle: const TextStyle(
+          fontSize: 19,
+          color: Colors.orangeAccent,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         automaticallyImplyLeading: false,
       ),
-      body: const Center(child: Text('Bot Assistant Page Content')),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: const Center(
+          child: Text(
+            'I will integrate a chat bot here for users to ask construction related question',
+          ),
+        ),
+      ),
     );
   }
 }
@@ -379,9 +405,22 @@ class _SavedPageState extends State<SavedPage>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Saved'),
+        titleTextStyle: const TextStyle(
+          fontSize: 19,
+          color: Colors.orangeAccent,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         automaticallyImplyLeading: false,
       ),
-      body: const Center(child: Text('Saved Page Content')),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: const Center(
+          child: Text(
+            'This is where all saved calculations will be in case the user wants to revisit an old calculation',
+          ),
+        ),
+      ),
     );
   }
 }
@@ -404,9 +443,35 @@ class _ProfilePageState extends State<ProfilePage>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
+        titleTextStyle: const TextStyle(
+          fontSize: 19,
+          color: Colors.orangeAccent,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         automaticallyImplyLeading: false,
       ),
-      body: const Center(child: Text('Profile Page Content')),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: const Center(
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              Text(
+                'Nothing much for now. I might add Authentication later so users can store in the cloud too and who knows add a status update feature for architects and engineers to share their personal designs. ',
+              ),
+              SizedBox(height: 20),
+              Text(
+                'And who knows add a status update feature for architects and engineers to share their personal designs. ',
+              ),
+              SizedBox(height: 20),
+              Text(
+                'And also use image recognition to remove any status update that is not related 😅',
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -420,6 +485,12 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
+        titleTextStyle: const TextStyle(
+          fontSize: 19,
+          color: Colors.orangeAccent,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         backgroundColor: Colors.black,
         foregroundColor: Colors.orangeAccent,
       ),
@@ -430,22 +501,11 @@ class SettingsPage extends StatelessWidget {
           children: [
             ListTile(
               leading: Icon(Icons.person, color: Colors.orange),
-              title: Text('Account Settings'),
-              subtitle: Text('Manage your account preferences'),
+              title: Text('General Settings'),
+              subtitle: Text('Manage your preferences like theme'),
               trailing: Icon(Icons.arrow_forward_ios, size: 16),
             ),
-            ListTile(
-              leading: Icon(Icons.notifications, color: Colors.orange),
-              title: Text('Notifications'),
-              subtitle: Text('Configure notification settings'),
-              trailing: Icon(Icons.arrow_forward_ios, size: 16),
-            ),
-            ListTile(
-              leading: Icon(Icons.security, color: Colors.orange),
-              title: Text('Privacy & Security'),
-              subtitle: Text('Manage your privacy settings'),
-              trailing: Icon(Icons.arrow_forward_ios, size: 16),
-            ),
+
             ListTile(
               leading: Icon(Icons.help, color: Colors.orange),
               title: Text('Help & Support'),
@@ -474,6 +534,12 @@ class AutoEstimatePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Automatic Estimate'),
+        titleTextStyle: const TextStyle(
+          fontSize: 19,
+          color: Colors.orangeAccent,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         backgroundColor: Colors.black,
         foregroundColor: Colors.orangeAccent,
       ),
@@ -482,59 +548,59 @@ class AutoEstimatePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Automatic Estimate Calculation',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+            // const Text(
+            //   'Automatic Estimate Calculation',
+            //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            // ),
             const SizedBox(height: 20),
             const Text(
-              'This feature will automatically calculate material quantities and costs based on your project details.',
+              'This is where I will integrate the automatic building quantity estimator',
               style: TextStyle(fontSize: 16, color: Colors.black54),
             ),
             const SizedBox(height: 30),
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset(
-                      'assets/animations/bot2.json',
-                      height: 150,
-                      width: 150,
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Automatic Calculation Features:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    _buildFeatureItem('📐 Smart dimension analysis'),
-                    _buildFeatureItem('🧮 Automatic quantity calculation'),
-                    _buildFeatureItem('💰 Real-time cost estimation'),
-                    _buildFeatureItem('📊 Material optimization'),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Add your automatic calculation logic here
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                ),
-                child: const Text(
-                  'Start Automatic Calculation',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              ),
-            ),
+            // Expanded(
+            //   child: Center(
+            //     child: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         Lottie.asset(
+            //           'assets/animations/bot2.json',
+            //           height: 150,
+            //           width: 150,
+            //         ),
+            //         const SizedBox(height: 20),
+            //         const Text(
+            //           'Automatic Calculation Features:',
+            //           style: TextStyle(
+            //             fontSize: 18,
+            //             fontWeight: FontWeight.w600,
+            //           ),
+            //         ),
+            //         const SizedBox(height: 15),
+            //         _buildFeatureItem('📐 Smart dimension analysis'),
+            //         _buildFeatureItem('🧮 Automatic quantity calculation'),
+            //         _buildFeatureItem('💰 Real-time cost estimation'),
+            //         _buildFeatureItem('📊 Material optimization'),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // SizedBox(
+            //   width: double.infinity,
+            //   child: ElevatedButton(
+            //     onPressed: () {
+            //       // Add your automatic calculation logic here
+            //     },
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.orange,
+            //       padding: const EdgeInsets.symmetric(vertical: 15),
+            //     ),
+            //     child: const Text(
+            //       'Start Automatic Calculation',
+            //       style: TextStyle(fontSize: 16, color: Colors.white),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -564,6 +630,12 @@ class ManualEstimatePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manual Estimate'),
+        titleTextStyle: const TextStyle(
+          fontSize: 19,
+          color: Colors.orangeAccent,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic,
+        ),
         backgroundColor: Colors.black,
         foregroundColor: Colors.orangeAccent,
       ),
@@ -572,65 +644,65 @@ class ManualEstimatePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Manual Estimate Calculation',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+            // const Text(
+            //   'Manual Estimate Calculation',
+            //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            // ),
             const SizedBox(height: 20),
             const Text(
-              'Enter your project details manually for precise control over material quantities and costs.',
+              'This is where I will list all the manual building quantity calculators like wall tile estimator, block mould material estimator',
               style: TextStyle(fontSize: 16, color: Colors.black54),
             ),
             const SizedBox(height: 30),
-            Expanded(
-              child: ListView(
-                children: [
-                  _buildInputField('Project Name', 'Enter project name'),
-                  _buildInputField('Length (m)', 'Enter length'),
-                  _buildInputField('Width (m)', 'Enter width'),
-                  _buildInputField('Height (m)', 'Enter height'),
-                  _buildInputField('Material Type', 'Select material'),
-                  _buildInputField('Quantity', 'Enter quantity'),
-                  _buildInputField('Unit Price', 'Enter unit price'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      // Clear form logic
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.orange),
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                    ),
-                    child: const Text(
-                      'Clear',
-                      style: TextStyle(color: Colors.orange),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Calculate logic
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                    ),
-                    child: const Text(
-                      'Calculate',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // Expanded(
+            //   child: ListView(
+            //     children: [
+            //       _buildInputField('Project Name', 'Enter project name'),
+            //       _buildInputField('Length (m)', 'Enter length'),
+            //       _buildInputField('Width (m)', 'Enter width'),
+            //       _buildInputField('Height (m)', 'Enter height'),
+            //       _buildInputField('Material Type', 'Select material'),
+            //       _buildInputField('Quantity', 'Enter quantity'),
+            //       _buildInputField('Unit Price', 'Enter unit price'),
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: OutlinedButton(
+            //         onPressed: () {
+            //           // Clear form logic
+            //         },
+            //         style: OutlinedButton.styleFrom(
+            //           side: const BorderSide(color: Colors.orange),
+            //           padding: const EdgeInsets.symmetric(vertical: 15),
+            //         ),
+            //         child: const Text(
+            //           'Clear',
+            //           style: TextStyle(color: Colors.orange),
+            //         ),
+            //       ),
+            //     ),
+            //     const SizedBox(width: 10),
+            //     Expanded(
+            //       child: ElevatedButton(
+            //         onPressed: () {
+            //           // Calculate logic
+            //         },
+            //         style: ElevatedButton.styleFrom(
+            //           backgroundColor: Colors.orange,
+            //           padding: const EdgeInsets.symmetric(vertical: 15),
+            //         ),
+            //         child: const Text(
+            //           'Calculate',
+            //           style: TextStyle(color: Colors.white),
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),
