@@ -1,7 +1,15 @@
-import 'package:estimate_q/widgets/glass_nav_bar.dart';
+import 'package:estimateQ/auto_estimate_page.dart';
+import 'package:estimateQ/bot_assistant_page.dart';
+import 'package:estimateQ/manual_estimate_page.dart';
+import 'package:estimateQ/profile_page.dart';
+import 'package:estimateQ/saved_page.dart';
+import 'package:estimateQ/settings_page.dart';
+import 'package:estimateQ/tools_page.dart';
+import 'package:estimateQ/widgets/glass_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import "package:lottie/lottie.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +39,7 @@ class MainNavigator extends StatefulWidget {
 }
 
 class _MainNavigatorState extends State<MainNavigator> {
-  int _currentIndex = 0; // 👈 Changed to 1 (Tools page as default)
+  int _currentIndex = 0;
 
   // 👇 Using PageStorage to save state for each page
   final List<Widget> _pages = [
@@ -86,9 +94,45 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
-    // 👇 Only start animation if state is not already set
-    if (!_movedUp && !_showTyping) {
+    _loadAnimationState();
+  }
+
+  // Load animation state from shared preferences
+  Future<void> _loadAnimationState() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      // Check if animation has already been shown
+      final animationShown = prefs.getBool('animation_shown') ?? false;
+
+      if (animationShown) {
+        // If animation was shown before, set all states to their final values
+        if (mounted) {
+          setState(() {
+            _movedUp = true;
+            _showTyping = false;
+            _showText = true;
+            _showFirstButton = true;
+            _showSecondButton = true;
+          });
+        }
+      } else {
+        // If animation hasn't been shown, start it
+        _startAnimation();
+      }
+    } catch (e) {
+      // If there's any error, start the animation
       _startAnimation();
+    }
+  }
+
+  // Save animation state to shared preferences
+  Future<void> _saveAnimationState() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('animation_shown', true);
+    } catch (e) {
+      print('Error saving animation state: $e');
     }
   }
 
@@ -128,8 +172,12 @@ class _MyHomePageState extends State<MyHomePage>
     await Future.delayed(const Duration(milliseconds: 1200));
     if (!mounted) return;
     setState(() => _showSecondButton = true);
+
+    // 👇 Save animation state when all animations are complete
+    _saveAnimationState();
   }
 
+  // ... rest of your existing methods remain the same
   void _navigateToSettings(BuildContext context) {
     Navigator.push(
       context,
@@ -153,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // 👈 Needed for AutomaticKeepAliveClientMixin
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -196,8 +244,6 @@ class _MyHomePageState extends State<MyHomePage>
                       : Alignment.center,
                   curve: Curves.easeOut,
                   child: Center(
-                    // duration: const Duration(milliseconds: 200),
-                    // opacity: _visible ? 1.0 : 0.0,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -222,6 +268,18 @@ class _MyHomePageState extends State<MyHomePage>
                           speed: const Duration(milliseconds: 60),
                           textAlign: TextAlign.center,
                         ),
+                      ],
+                      totalRepeatCount: 1,
+                      onFinished: _showButtons,
+                    ),
+                  ),
+                const SizedBox(height: 20),
+
+                if (_showText)
+                  DefaultTextStyle(
+                    style: const TextStyle(fontSize: 16, color: Colors.black54),
+                    child: AnimatedTextKit(
+                      animatedTexts: [
                         TypewriterAnimatedText(
                           'How may I help you today?',
                           speed: const Duration(milliseconds: 60),
@@ -233,7 +291,6 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                   ),
                 const SizedBox(height: 20),
-
                 // Text
                 AnimatedOpacity(
                   opacity: _showText ? 1.0 : 0.0,
@@ -305,431 +362,6 @@ class _MyHomePageState extends State<MyHomePage>
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-// 👇 Add AutomaticKeepAliveClientMixin to other pages if you want to preserve their state too
-class ToolsPage extends StatefulWidget {
-  const ToolsPage({super.key});
-
-  @override
-  State<ToolsPage> createState() => _ToolsPageState();
-}
-
-class _ToolsPageState extends State<ToolsPage>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tools'),
-        titleTextStyle: const TextStyle(
-          fontSize: 19,
-          color: Colors.orangeAccent,
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic,
-        ),
-        automaticallyImplyLeading: false,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: const Center(
-          child: Text(
-            'All the Tools including the automatic and manual tools will be here',
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class BotAssistantPage extends StatefulWidget {
-  const BotAssistantPage({super.key});
-
-  @override
-  State<BotAssistantPage> createState() => _BotAssistantPageState();
-}
-
-class _BotAssistantPageState extends State<BotAssistantPage>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chat Bot'),
-        titleTextStyle: const TextStyle(
-          fontSize: 19,
-          color: Colors.orangeAccent,
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic,
-        ),
-        automaticallyImplyLeading: false,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: const Center(
-          child: Text(
-            'I will integrate a chat bot here for users to ask construction related question',
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SavedPage extends StatefulWidget {
-  const SavedPage({super.key});
-
-  @override
-  State<SavedPage> createState() => _SavedPageState();
-}
-
-class _SavedPageState extends State<SavedPage>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Saved'),
-        titleTextStyle: const TextStyle(
-          fontSize: 19,
-          color: Colors.orangeAccent,
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic,
-        ),
-        automaticallyImplyLeading: false,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: const Center(
-          child: Text(
-            'This is where all saved calculations will be in case the user wants to revisit an old calculation',
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
-
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        titleTextStyle: const TextStyle(
-          fontSize: 19,
-          color: Colors.orangeAccent,
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic,
-        ),
-        automaticallyImplyLeading: false,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: const Center(
-          child: Column(
-            children: [
-              SizedBox(height: 20),
-              Text(
-                'Nothing much for now. I might add Authentication later so users can store in the cloud too and who knows add a status update feature for architects and engineers to share their personal designs. ',
-              ),
-              SizedBox(height: 20),
-              Text(
-                'And who knows add a status update feature for architects and engineers to share their personal designs. ',
-              ),
-              SizedBox(height: 20),
-              Text(
-                'And also use image recognition to remove any status update that is not related 😅',
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Settings Page
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        titleTextStyle: const TextStyle(
-          fontSize: 19,
-          color: Colors.orangeAccent,
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic,
-        ),
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.orangeAccent,
-      ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              leading: Icon(Icons.person, color: Colors.orange),
-              title: Text('General Settings'),
-              subtitle: Text('Manage your preferences like theme'),
-              trailing: Icon(Icons.arrow_forward_ios, size: 16),
-            ),
-
-            ListTile(
-              leading: Icon(Icons.help, color: Colors.orange),
-              title: Text('Help & Support'),
-              subtitle: Text('Get help and contact support'),
-              trailing: Icon(Icons.arrow_forward_ios, size: 16),
-            ),
-            ListTile(
-              leading: Icon(Icons.info, color: Colors.orange),
-              title: Text('About'),
-              subtitle: Text('App version and information'),
-              trailing: Icon(Icons.arrow_forward_ios, size: 16),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// Auto Estimate Page
-class AutoEstimatePage extends StatelessWidget {
-  const AutoEstimatePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Automatic Estimate'),
-        titleTextStyle: const TextStyle(
-          fontSize: 19,
-          color: Colors.orangeAccent,
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic,
-        ),
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.orangeAccent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // const Text(
-            //   'Automatic Estimate Calculation',
-            //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            // ),
-            const SizedBox(height: 20),
-            const Text(
-              'This is where I will integrate the automatic building quantity estimator',
-              style: TextStyle(fontSize: 16, color: Colors.black54),
-            ),
-            const SizedBox(height: 30),
-            // Expanded(
-            //   child: Center(
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: [
-            //         Lottie.asset(
-            //           'assets/animations/bot2.json',
-            //           height: 150,
-            //           width: 150,
-            //         ),
-            //         const SizedBox(height: 20),
-            //         const Text(
-            //           'Automatic Calculation Features:',
-            //           style: TextStyle(
-            //             fontSize: 18,
-            //             fontWeight: FontWeight.w600,
-            //           ),
-            //         ),
-            //         const SizedBox(height: 15),
-            //         _buildFeatureItem('📐 Smart dimension analysis'),
-            //         _buildFeatureItem('🧮 Automatic quantity calculation'),
-            //         _buildFeatureItem('💰 Real-time cost estimation'),
-            //         _buildFeatureItem('📊 Material optimization'),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // SizedBox(
-            //   width: double.infinity,
-            //   child: ElevatedButton(
-            //     onPressed: () {
-            //       // Add your automatic calculation logic here
-            //     },
-            //     style: ElevatedButton.styleFrom(
-            //       backgroundColor: Colors.orange,
-            //       padding: const EdgeInsets.symmetric(vertical: 15),
-            //     ),
-            //     child: const Text(
-            //       'Start Automatic Calculation',
-            //       style: TextStyle(fontSize: 16, color: Colors.white),
-            //     ),
-            //   ),
-            // ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFeatureItem(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          const Icon(Icons.check_circle, color: Colors.green, size: 20),
-          const SizedBox(width: 10),
-          Text(text, style: const TextStyle(fontSize: 16)),
-        ],
-      ),
-    );
-  }
-}
-
-// Manual Estimate Page
-class ManualEstimatePage extends StatelessWidget {
-  const ManualEstimatePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Manual Estimate'),
-        titleTextStyle: const TextStyle(
-          fontSize: 19,
-          color: Colors.orangeAccent,
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic,
-        ),
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.orangeAccent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // const Text(
-            //   'Manual Estimate Calculation',
-            //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            // ),
-            const SizedBox(height: 20),
-            const Text(
-              'This is where I will list all the manual building quantity calculators like wall tile estimator, block mould material estimator',
-              style: TextStyle(fontSize: 16, color: Colors.black54),
-            ),
-            const SizedBox(height: 30),
-            // Expanded(
-            //   child: ListView(
-            //     children: [
-            //       _buildInputField('Project Name', 'Enter project name'),
-            //       _buildInputField('Length (m)', 'Enter length'),
-            //       _buildInputField('Width (m)', 'Enter width'),
-            //       _buildInputField('Height (m)', 'Enter height'),
-            //       _buildInputField('Material Type', 'Select material'),
-            //       _buildInputField('Quantity', 'Enter quantity'),
-            //       _buildInputField('Unit Price', 'Enter unit price'),
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(height: 20),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child: OutlinedButton(
-            //         onPressed: () {
-            //           // Clear form logic
-            //         },
-            //         style: OutlinedButton.styleFrom(
-            //           side: const BorderSide(color: Colors.orange),
-            //           padding: const EdgeInsets.symmetric(vertical: 15),
-            //         ),
-            //         child: const Text(
-            //           'Clear',
-            //           style: TextStyle(color: Colors.orange),
-            //         ),
-            //       ),
-            //     ),
-            //     const SizedBox(width: 10),
-            //     Expanded(
-            //       child: ElevatedButton(
-            //         onPressed: () {
-            //           // Calculate logic
-            //         },
-            //         style: ElevatedButton.styleFrom(
-            //           backgroundColor: Colors.orange,
-            //           padding: const EdgeInsets.symmetric(vertical: 15),
-            //         ),
-            //         child: const Text(
-            //           'Calculate',
-            //           style: TextStyle(color: Colors.white),
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInputField(String label, String hint) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
-          const SizedBox(height: 8),
-          TextField(
-            decoration: InputDecoration(
-              hintText: hint,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Colors.orange),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
